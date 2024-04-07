@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public class Main extends Application {
     @Override
+    // New Branch
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("media-player.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
