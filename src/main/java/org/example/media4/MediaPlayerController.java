@@ -81,6 +81,9 @@ public class MediaPlayerController {
             // Bind volumeSlider to MediaPlayer volume property
             mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty().divide(100.0));
 
+            // Set the initial volume of the media player
+            volumeSlider.setValue(75);
+
             // Initialize volumeSlider with initial volume value of MediaPlayer
             if (mediaPlayer != null) {
                 double initialVolume = mediaPlayer.getVolume() * 100.0; // Convert volume range (0.0 - 1.0) to (0 - 100)
