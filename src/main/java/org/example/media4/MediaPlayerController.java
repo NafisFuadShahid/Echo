@@ -14,6 +14,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MediaPlayerController {
 
@@ -32,6 +33,14 @@ public class MediaPlayerController {
     @FXML
     private Slider volumeSlider; // Volume slider from Scene Builder
 
+    @FXML
+    private Button btnForward;
+
+    @FXML
+    private Button btnBackward;
+
+
+
     private Media media;
     private MediaPlayer mediaPlayer;
 
@@ -40,11 +49,11 @@ public class MediaPlayerController {
     @FXML
     void btnPlay(MouseEvent event) {
         if (!isPlayed) {
-            btnPlay.setText("Pause");
+//            btnPlay.setText("Pause");
             mediaPlayer.play();
             isPlayed = true;
         } else {
-            btnPlay.setText("Play");
+//            btnPlay.setText("Play");
             mediaPlayer.pause();
             isPlayed = false;
         }
@@ -52,16 +61,42 @@ public class MediaPlayerController {
 
     @FXML
     void btnStop(MouseEvent event) {
-        btnPlay.setText("Play");
+//        btnPlay.setText("Play");
         mediaPlayer.stop();
         isPlayed = false;
     }
 
     @FXML
-    void selectMedia(ActionEvent event) {
+    void btnForwardClicked(ActionEvent event) {
+        seekMedia(5);
+    }
+
+    @FXML
+    void btnBackwardClicked(ActionEvent event) {
+        seekMedia(-5);
+    }
+
+    private void seekMedia(double seconds) {
+        if(mediaPlayer != null) {
+            double currentTime = mediaPlayer.getCurrentTime().toSeconds();
+            double newTime = currentTime + seconds;
+
+            if(newTime < 0) {
+                newTime = 0; // making sure we don't seek before the start
+            } else if (newTime > mediaPlayer.getTotalDuration().toSeconds()) {
+                newTime = mediaPlayer.getTotalDuration().toSeconds();
+            }
+
+            mediaPlayer.seek(Duration.seconds(newTime));
+        }
+    }
+
+    @FXML
+    void selectMedia(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Media");
         File selectedFile = fileChooser.showOpenDialog(null);
+
 
         if (selectedFile != null) {
             String url = selectedFile.toURI().toString();

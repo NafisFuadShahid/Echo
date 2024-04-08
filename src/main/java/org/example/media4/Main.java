@@ -26,7 +26,7 @@ public class Main extends Application {
         scene.getStylesheets().add(css);
 
 
-        //adding a logo at the top left corner
+        //adding a logo in the top left corner
 
 //        String imagePath = "src/main/resources/org/example/media4/PlayButtonLogo.png";
 //        Image icon = new Image("file:" + imagePath);
