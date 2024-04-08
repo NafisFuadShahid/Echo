@@ -21,7 +21,7 @@
             <children>
                 <HBox alignment="CENTER" prefHeight="43.0" prefWidth="850.0">
                     <children>
-                        <Slider fx:id="slider" onMousePressed="#sliderPressed" HBox.hgrow="ALWAYS" />
+                        <Slider fx:id="slider" onMouseDragged="#sliderPressed" onMousePressed="#sliderPressed" HBox.hgrow="ALWAYS" />
                     </children>
                     <padding>
                         <Insets left="15.0" right="15.0" />
