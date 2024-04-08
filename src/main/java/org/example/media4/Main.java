@@ -14,16 +14,21 @@ public class Main extends Application {
     // New Branch
     public void start(Stage stage) throws IOException {
 
-//        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("media-player.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("media-player.fxml"));
 //        Scene scene = new Scene(fxmlLoader.load());
 
         // created a parent node.
-        Parent root = FXMLLoader.load(getClass().getResource("media-player.fxml"));
+//        Parent root = FXMLLoader.load(getClass().getResource("media-player.fxml"));
+        Parent root = loader.load();
         Scene scene = new Scene(root);
 
         // implementing css
-        String css = this.getClass().getResource("app.css").toExternalForm();
+        String css = this.getClass().getResource("green-theme.css").toExternalForm();
         scene.getStylesheets().add(css);
+
+        //dynamic theme
+        MediaPlayerController controller = loader.getController();
+        controller.setMainScene(scene);
 
 
         //adding a logo in the top left corner

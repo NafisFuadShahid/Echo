@@ -2,8 +2,10 @@ package org.example.media4;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
@@ -15,8 +17,13 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class MediaPlayerController {
+public class MediaPlayerController implements Initializable {
+
+
+    private Scene mainScene;
 
     @FXML
     private Button btnPlay;
@@ -39,8 +46,65 @@ public class MediaPlayerController {
     @FXML
     private Button btnBackward;
 
+    @FXML
+    private ChoiceBox<String> themeChoiceBox;
+
+    private String[] theme = {"Dark", "Green", "Blue", "Red"};
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        themeChoiceBox.getItems().addAll(theme);
+        themeChoiceBox.setOnAction(this::applyTheme);
+    }
+
+    @FXML
+    void applyTheme(ActionEvent event) {
+        String selectedTheme = themeChoiceBox.getValue();
+        switch (selectedTheme) {
+            case "Green":
+                changeThemeToGreen();
+                break;
+            case "Dark":
+                changeThemeToDark();
+                break;
+            case "Blue":
+                changeThemeToBlue();
+                break;
+            case "Red":
+                changeThemeToRed();
+                break;
+            // Add more themes as needed
+        }
+    }
 
 
+    public void setMainScene(Scene scene) {
+        this.mainScene = scene;
+    }
+
+    @FXML
+    void changeThemeToGreen() {
+        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().add(getClass().getResource("green-theme.css").toExternalForm());
+    }
+
+    @FXML
+    void changeThemeToDark() {
+        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().add(getClass().getResource("dark-theme.css").toExternalForm());
+    }
+
+    @FXML
+    void changeThemeToBlue() {
+        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().add(getClass().getResource("blue-theme.css").toExternalForm());
+    }
+
+    @FXML
+    void changeThemeToRed() {
+        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().add(getClass().getResource("red-theme.css").toExternalForm());
+    }
     private Media media;
     private MediaPlayer mediaPlayer;
 
@@ -141,4 +205,6 @@ public class MediaPlayerController {
     private void sliderPressed(MouseEvent event) {
         mediaPlayer.seek(Duration.seconds(slider.getValue()));
     }
+
+
 }
