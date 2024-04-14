@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
@@ -118,10 +119,14 @@ public class MediaPlayerController implements Initializable {
     void btnPlay(MouseEvent event) {
         if (!isPlayed) {
 //            btnPlay.setText("Pause");
+//            Image image = new Image(getClass().getResourceAsStream("org/example/media4/Icon/pause.png"));
+//            myimageView.setImage(image);
             mediaPlayer.play();
             isPlayed = true;
         } else {
 //            btnPlay.setText("Play");
+//            Image image = new Image(getClass().getResourceAsStream("org/example/media4/Icon/play.png"));
+//            myimageView.setImage(image);
             mediaPlayer.pause();
             isPlayed = false;
         }

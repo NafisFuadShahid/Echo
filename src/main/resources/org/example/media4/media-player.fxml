@@ -34,7 +34,7 @@
                         <Button mnemonicParsing="false" onAction="#selectMedia" text="Open" />
                         <Button fx:id="playButton" mnemonicParsing="false" onMouseClicked="#btnPlay">
                      <graphic>
-                        <ImageView fitHeight="18.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="myimageView" fitHeight="18.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@Icon/play.png" />
                            </image>
