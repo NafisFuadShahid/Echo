@@ -4,10 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -17,7 +14,9 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
 
 public class MediaPlayerController implements Initializable {
 
@@ -49,7 +48,7 @@ public class MediaPlayerController implements Initializable {
     private ChoiceBox<String> themeChoiceBox;
 
     private String[] theme = {"Dark", "Green", "Blue", "Red"};
-
+    private int fileSelected = 0;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         themeChoiceBox.getItems().addAll(theme);
@@ -111,6 +110,16 @@ public class MediaPlayerController implements Initializable {
 
     @FXML
     void btnPlay(MouseEvent event) {
+         if(fileSelected != 1) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("File not Found!");
+            alert.setHeaderText("Please Choose a Valid File First!");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (((Optional<?>) result).isPresent() && result.get().equals(ButtonType.OK)) {
+                //do nothing
+            }
+        }
+
         if (!isPlayed) {
 //            btnPlay.setText("Pause");
             mediaPlayer.play();
@@ -156,48 +165,49 @@ public class MediaPlayerController implements Initializable {
 
     @FXML
     void selectMedia(ActionEvent event) throws IOException {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open");
-            File selectedFile = fileChooser.showOpenDialog(null);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open");
+        File selectedFile = fileChooser.showOpenDialog(null);
 
 
-            if (selectedFile != null) {
-                String url = selectedFile.toURI().toString();
+        if (selectedFile != null) {
+            fileSelected = 1;
+            String url = selectedFile.toURI().toString();
 
-                media = new Media(url);
-                mediaPlayer = new MediaPlayer(media);
+            media = new Media(url);
+            mediaPlayer = new MediaPlayer(media);
 
-                mediaView.setMediaPlayer(mediaPlayer);
+            mediaView.setMediaPlayer(mediaPlayer);
 
-                // Update media duration and slider max value when media is ready
-                mediaPlayer.setOnReady(() -> {
-                    Duration totalDuration = media.getDuration();
-                    slider.setMax(totalDuration.toSeconds());
-                    lblDuration.setText("Duration: 00 / " + (int) totalDuration.toSeconds());
-                });
+            // Update media duration and slider max value when media is ready
+            mediaPlayer.setOnReady(() -> {
+                Duration totalDuration = media.getDuration();
+                slider.setMax(totalDuration.toSeconds());
+                lblDuration.setText("Duration: 00 / " + (int) totalDuration.toSeconds());
+            });
 
-                // Bind volumeSlider to MediaPlayer volume property
-                mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty().divide(100.0));
+            // Bind volumeSlider to MediaPlayer volume property
+            mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty().divide(100.0));
 
-                // Set the initial volume of the media player
-                volumeSlider.setValue(75);
+            // Set the initial volume of the media player
+            volumeSlider.setValue(75);
 
-                // Initialize volumeSlider with initial volume value of MediaPlayer
-                if (mediaPlayer != null) {
-                    double initialVolume = mediaPlayer.getVolume() * 100.0; // Convert volume range (0.0 - 1.0) to (0 - 100)
-                    volumeSlider.setValue(initialVolume);
-                }
-
-                // Add listener to update slider and lblDuration based on currentTime
-                mediaPlayer.currentTimeProperty().addListener((observableValue, oldValue, newValue) -> {
-                    slider.setValue(newValue.toSeconds());
-                    lblDuration.setText("Duration: " + (int) slider.getValue() + " / " + (int) media.getDuration().toSeconds());
-                });
-
-                Scene scene = mediaView.getScene();
-                mediaView.fitWidthProperty().bind(scene.widthProperty());
-                mediaView.fitHeightProperty().bind(scene.heightProperty());
+            // Initialize volumeSlider with initial volume value of MediaPlayer
+            if (mediaPlayer != null) {
+                double initialVolume = mediaPlayer.getVolume() * 100.0; // Convert volume range (0.0 - 1.0) to (0 - 100)
+                volumeSlider.setValue(initialVolume);
             }
+
+            // Add listener to update slider and lblDuration based on currentTime
+            mediaPlayer.currentTimeProperty().addListener((observableValue, oldValue, newValue) -> {
+                slider.setValue(newValue.toSeconds());
+                lblDuration.setText("Duration: " + (int) slider.getValue() + " / " + (int) media.getDuration().toSeconds());
+            });
+
+            Scene scene = mediaView.getScene();
+            mediaView.fitWidthProperty().bind(scene.widthProperty());
+            mediaView.fitHeightProperty().bind(scene.heightProperty());
+        }
     }
 
     @FXML
