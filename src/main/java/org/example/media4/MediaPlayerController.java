@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -26,6 +27,9 @@ public class MediaPlayerController implements Initializable {
 
     @FXML
     private Button btnPlay;
+
+    @FXML
+    private ImageView myimageView;
 
     @FXML
     private Label lblDuration;
