@@ -183,7 +183,14 @@ public class MediaPlayerController implements Initializable {
             mediaPlayer.setOnReady(() -> {
                 Duration totalDuration = media.getDuration();
                 slider.setMax(totalDuration.toSeconds());
-                lblDuration.setText("Duration: 00 / " + (int) totalDuration.toSeconds());
+                int hoursAtStart, secondsAtStart, minutesAtStart, totalSecsAtStart;
+                String timeStringAtStart;
+                totalSecsAtStart = (int) (int) totalDuration.toSeconds();
+                hoursAtStart = totalSecsAtStart / 3600;
+                minutesAtStart = (totalSecsAtStart % 3600) / 60;
+                secondsAtStart = totalSecsAtStart % 60;
+                timeStringAtStart = String.format("%02d:%02d:%02d", hoursAtStart, minutesAtStart, secondsAtStart);
+                lblDuration.setText("Duration: 00 / " + timeStringAtStart);
             });
 
             // Bind volumeSlider to MediaPlayer volume property
@@ -201,7 +208,24 @@ public class MediaPlayerController implements Initializable {
             // Add listener to update slider and lblDuration based on currentTime
             mediaPlayer.currentTimeProperty().addListener((observableValue, oldValue, newValue) -> {
                 slider.setValue(newValue.toSeconds());
-                lblDuration.setText("Duration: " + (int) slider.getValue() + " / " + (int) media.getDuration().toSeconds());
+                int hours, seconds, minutes, totalSecs;
+                String timeString;
+                totalSecs = (int) media.getDuration().toSeconds();
+                hours = totalSecs / 3600;
+                minutes = (totalSecs % 3600) / 60;
+                seconds = totalSecs % 60;
+                timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+                int hoursNow, secondsNow, minutesNow, totalSecsNow;
+                String timeStringNow;
+                totalSecsNow = (int) slider.getValue();
+                hoursNow = totalSecsNow / 3600;
+                minutesNow = (totalSecsNow % 3600) / 60;
+                secondsNow = totalSecsNow % 60;
+                timeStringNow = String.format("%02d:%02d:%02d", hoursNow, minutesNow, secondsNow);
+
+
+                lblDuration.setText("Duration: " + timeStringNow + " / " + timeString);
             });
 
             Scene scene = mediaView.getScene();
