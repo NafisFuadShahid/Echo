@@ -23,7 +23,7 @@ public class Main extends Application {
         Scene scene = new Scene(root);
 
         // implementing css
-        String css = this.getClass().getResource("green-theme.css").toExternalForm();
+        String css = this.getClass().getResource("blue-theme.css").toExternalForm();
         scene.getStylesheets().add(css);
 
         //dynamic theme
@@ -43,7 +43,7 @@ public class Main extends Application {
         stage.setTitle("Echo");
         stage.setScene(scene);
         //stage.setFullScreen(true);
-        stage.setMaximized(true);
+        //stage.setMaximized(true);
         stage.show();
     }
 

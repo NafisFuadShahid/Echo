@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -19,6 +20,7 @@ import java.util.ResourceBundle;
 
 
 public class MediaPlayerController implements Initializable {
+
 
 
     private Scene mainScene;
@@ -111,7 +113,7 @@ public class MediaPlayerController implements Initializable {
 
     @FXML
     void btnPlay(MouseEvent event) {
-         if(fileSelected != 1) {
+        if(fileSelected != 1) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("File not Found!");
             alert.setHeaderText("Please Choose a Valid File First!");
@@ -234,11 +236,8 @@ public class MediaPlayerController implements Initializable {
             mediaView.fitHeightProperty().bind(scene.heightProperty());
         }
     }
-
     @FXML
     private void sliderPressed(MouseEvent event) {
         mediaPlayer.seek(Duration.seconds(slider.getValue()));
     }
-
-
 }
