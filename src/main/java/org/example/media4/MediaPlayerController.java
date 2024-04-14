@@ -26,7 +26,7 @@ public class MediaPlayerController implements Initializable {
     private Scene mainScene;
 
     @FXML
-    private Button btnPlay;
+    private Button playButton;
 
     @FXML
     private ImageView myimageView;
