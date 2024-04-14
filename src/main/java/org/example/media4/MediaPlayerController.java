@@ -54,7 +54,7 @@ public class MediaPlayerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         themeChoiceBox.getItems().addAll(theme);
-        themeChoiceBox.setValue("Green");
+        themeChoiceBox.setValue("Blue");
         themeChoiceBox.setOnAction(this::applyTheme);
     }
 
