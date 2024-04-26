@@ -166,11 +166,17 @@ public class MediaPlayerController implements Initializable {
         }
     }
 
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
     @FXML
     void selectMedia(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open");
         File selectedFile = fileChooser.showOpenDialog(null);
+        String fileExtension = getFileExtension(selectedFile);
+
 
 
         if (selectedFile != null) {
@@ -178,8 +184,11 @@ public class MediaPlayerController implements Initializable {
             String url = selectedFile.toURI().toString();
 
             media = new Media(url);
-            mediaPlayer = new MediaPlayer(media);
 
+            mediaPlayer = new MediaPlayer(media);
+            if(fileExtension.equals("mp3") || fileExtension.equals("wav")){
+               System.out.println((String) media.getMetadata().get("year"));
+            }
             mediaView.setMediaPlayer(mediaPlayer);
 
             // Update media duration and slider max value when media is ready
