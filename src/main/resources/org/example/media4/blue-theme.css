@@ -1,3 +1,33 @@
 .root{
-    -fx-background-color: #8AC5DC;
+    -fx-background-color: #4dc6cd;
+}
+#mainSlider .track{
+    -fx-background-color: #fdf500;
+    -fx-height: 20px;
+}
+
+#volSlider .track{
+    -fx-background-color: #ef92b4;
+}
+#open{
+    -fx-background-color: #788bff;
+}
+#play{
+    -fx-background-color: #788bff;
+}
+#seekback10{
+    -fx-background-color: #788bff;
+}
+#seekforward10{
+    -fx-background-color: #788bff;
+}
+#picker{
+    -fx-background-color: #788bff;
+}
+#restart{
+    -fx-background-color: #788bff;
+}
+#picker{
+    -fx-background-color: #4169e1;
+    -fx-border: 1px peachpuff;
 }
