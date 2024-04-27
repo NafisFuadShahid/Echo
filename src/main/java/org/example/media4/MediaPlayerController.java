@@ -1,29 +1,39 @@
 package org.example.media4;
 
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 
 public class MediaPlayerController implements Initializable {
 
 
 
     private Scene mainScene;
+    @FXML
+    private Label lbartist;
+
+    @FXML
+    private Label lbalbum;
 
     @FXML
     private Button btnPlay;
@@ -177,19 +187,34 @@ public class MediaPlayerController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(null);
         String fileExtension = getFileExtension(selectedFile);
 
-
-
         if (selectedFile != null) {
             fileSelected = 1;
             String url = selectedFile.toURI().toString();
 
             media = new Media(url);
+            String fileName = selectedFile.getName(); // Get the name of the selected file
 
             mediaPlayer = new MediaPlayer(media);
             if(fileExtension.equals("mp3") || fileExtension.equals("wav")){
-               System.out.println((String) media.getMetadata().get("year"));
+                media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object> c) -> {
+                    if (c.wasAdded()) {
+                        if ("artist".equals(c.getKey())) {
+                            String  artist = c.getValueAdded().toString();
+                            lbartist.setText(artist);
+                        } else if ("title".equals(c.getKey())) {
+                            String title = c.getValueAdded().toString();
+                        } else if ("year".equals(c.getKey())) {
+                            String album = c.getValueAdded().toString();
+                            lbalbum.setText(album);
+                        }
+                    }
+                });
             }
             mediaView.setMediaPlayer(mediaPlayer);
+
+            // Set window title to the name of the file being played
+            Stage stage = (Stage) mediaView.getScene().getWindow();
+            stage.setTitle(fileName);
 
             // Update media duration and slider max value when media is ready
             mediaPlayer.setOnReady(() -> {
@@ -243,6 +268,7 @@ public class MediaPlayerController implements Initializable {
             Scene scene = mediaView.getScene();
             mediaView.fitWidthProperty().bind(scene.widthProperty());
             mediaView.fitHeightProperty().bind(scene.heightProperty());
+            mediaPlayer.play();
         }
     }
     @FXML

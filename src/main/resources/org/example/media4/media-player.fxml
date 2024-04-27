@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.media4.MediaPlayerController">
     <center>
@@ -21,7 +22,13 @@
             <children>
                 <HBox alignment="CENTER" prefHeight="43.0" prefWidth="850.0">
                     <children>
-                        <Slider fx:id="slider" onMouseDragged="#sliderPressed" onMousePressed="#sliderPressed" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lbartist" alignment="CENTER" prefHeight="17.0" prefWidth="60.0" textAlignment="CENTER" />
+                        <Slider fx:id="slider" onMouseDragged="#sliderPressed" onMousePressed="#sliderPressed" prefHeight="14.0" prefWidth="664.0" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lbalbum" prefHeight="17.0" prefWidth="55.0" textAlignment="CENTER" translateX="5.0">
+                     <font>
+                        <Font name="System Italic" size="14.0" />
+                     </font>
+                  </Label>
                     </children>
                     <padding>
                         <Insets left="15.0" right="15.0" />
@@ -29,7 +36,10 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                  <Label text="Volume" />
+                  <Label text="Volume">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
                   <Slider fx:id="volumeSlider" prefHeight="15.0" prefWidth="93.0" showTickLabels="true" value="75.0" />
                         <Button mnemonicParsing="false" onAction="#selectMedia" text="Open" />
                         <Button fx:id="btnPlay" mnemonicParsing="false" onMouseClicked="#btnPlay">
