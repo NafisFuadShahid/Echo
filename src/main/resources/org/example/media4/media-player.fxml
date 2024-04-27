@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.media4.MediaPlayerController">
     <center>
@@ -20,10 +21,19 @@
     <bottom>
         <VBox prefHeight="120.0" prefWidth="850.0" BorderPane.alignment="CENTER">
             <children>
-                <HBox alignment="CENTER" prefHeight="43.0" prefWidth="850.0">
+            <HBox alignment="TOP_CENTER" prefHeight="45.0" prefWidth="850.0">
+               <children>
+                  <Text fx:id="subtitleText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" translateY="5.0" wrappingWidth="841.13671875">
+                     <font>
+                        <Font name="Lato Regular" size="25.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+                <HBox alignment="CENTER" prefHeight="32.0" prefWidth="850.0">
                     <children>
                   <Label fx:id="lbartist" alignment="CENTER" prefHeight="17.0" prefWidth="60.0" textAlignment="CENTER" />
-                        <Slider fx:id="slider" onMouseDragged="#sliderPressed" onMousePressed="#sliderPressed" prefHeight="14.0" prefWidth="664.0" HBox.hgrow="ALWAYS" />
+                        <Slider fx:id="slider" onMouseDragged="#sliderPressed" onMousePressed="#sliderPressed" prefHeight="22.0" prefWidth="705.0" HBox.hgrow="ALWAYS" />
                   <Label fx:id="lbalbum" prefHeight="17.0" prefWidth="55.0" textAlignment="CENTER" translateX="5.0">
                      <font>
                         <Font name="System Italic" size="14.0" />
@@ -34,7 +44,7 @@
                         <Insets left="15.0" right="15.0" />
                     </padding>
                 </HBox>
-                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                <HBox alignment="CENTER" prefHeight="22.0" prefWidth="850.0" spacing="10.0">
                     <children>
                   <Label text="Volume">
                      <font>

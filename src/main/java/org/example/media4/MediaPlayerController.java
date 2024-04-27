@@ -6,20 +6,21 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -34,6 +35,8 @@ public class MediaPlayerController implements Initializable {
 
     @FXML
     private Label lbalbum;
+    @FXML
+    private Text subtitleText;
 
     @FXML
     private Button btnPlay;
@@ -59,7 +62,7 @@ public class MediaPlayerController implements Initializable {
     @FXML
     private ChoiceBox<String> themeChoiceBox;
 
-    private String[] theme = {"Dark", "Green", "Blue", "Red"};
+    private final String[] theme = {"Dark", "Green", "Blue", "Red"};
     private int fileSelected = 0;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -87,7 +90,49 @@ public class MediaPlayerController implements Initializable {
             // Add more themes as needed
         }
     }
+    private Map<Integer, String> subtitles = new HashMap<>(); // Map to store subtitle texts with their sequence numbers
+    private Map<Integer, Duration> subtitleTimes = new HashMap<>(); // Map to store subtitle timings
+    private void loadSubtitles(File srtFile) {
+        subtitles.clear();
+        subtitleTimes.clear();
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(srtFile))) {
+            String line;
+            int sequenceNumber = 0;
+            while ((line = reader.readLine()) != null) {
+                if (!line.isEmpty()) {
+                    // Parse subtitle sequence number
+                    if (line.matches("^[0-9]+$")) {
+                        sequenceNumber = Integer.parseInt(line);
+                    } else if (line.matches("\\d{2}:\\d{2}:\\d{2},\\d{3} --> \\d{2}:\\d{2}:\\d{2},\\d{3}")) {
+                        // Parse subtitle timings
+                        String[] timings = line.split(" --> ");
+                        Duration startTime = parseTime(timings[0]);
+                        Duration endTime = parseTime(timings[1]);
+                        subtitleTimes.put(sequenceNumber, startTime);
+                    } else {
+                        // Parse subtitle text
+                        StringBuilder subtitleText = new StringBuilder(line);
+                        while ((line = reader.readLine()) != null && !line.isEmpty()) {
+                            subtitleText.append(" ").append(line);
+                        }
+                        subtitles.put(sequenceNumber, subtitleText.toString().trim());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private Duration parseTime(String timeString) {
+        String[] parts = timeString.split("[:,]");
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = Integer.parseInt(parts[1]);
+        int seconds = Integer.parseInt(parts[2]);
+        int milliseconds = Integer.parseInt(parts[3]);
+        long totalMilliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000 + milliseconds;
+        return Duration.millis(totalMilliseconds);
+    }
 
     public void setMainScene(Scene scene) {
         this.mainScene = scene;
@@ -186,10 +231,15 @@ public class MediaPlayerController implements Initializable {
         fileChooser.setTitle("Open");
         File selectedFile = fileChooser.showOpenDialog(null);
         String fileExtension = getFileExtension(selectedFile);
+        if (fileExtension.equals("srt")) {
+            loadSubtitles(selectedFile);
 
-        if (selectedFile != null) {
+        }
+
+        if (selectedFile != null && fileExtension != "srt") {
             fileSelected = 1;
             String url = selectedFile.toURI().toString();
+
 
             media = new Media(url);
             String fileName = selectedFile.getName(); // Get the name of the selected file
@@ -260,7 +310,7 @@ public class MediaPlayerController implements Initializable {
                 minutesNow = (totalSecsNow % 3600) / 60;
                 secondsNow = totalSecsNow % 60;
                 timeStringNow = String.format("%02d:%02d:%02d", hoursNow, minutesNow, secondsNow);
-
+                displaySubtitle(newValue);
 
                 lblDuration.setText("Duration: " + timeStringNow + " / " + timeString);
             });
@@ -275,4 +325,16 @@ public class MediaPlayerController implements Initializable {
     private void sliderPressed(MouseEvent event) {
         mediaPlayer.seek(Duration.seconds(slider.getValue()));
     }
+    private void displaySubtitle(Duration currentTime) {
+        for (Map.Entry<Integer, Duration> entry : subtitleTimes.entrySet()) {
+            if (currentTime.greaterThanOrEqualTo(entry.getValue())) {
+                // Find the subtitle corresponding to the current time
+                int subtitleNumber = entry.getKey();
+                String subtitle = subtitles.get(subtitleNumber);
+                subtitleText.setText(subtitle);
+            }
+        }
+    }
+
 }
+
