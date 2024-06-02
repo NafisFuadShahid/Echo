@@ -328,7 +328,7 @@ public class MediaPlayerController implements Initializable {
         fileChooser.setTitle("Open");
         File selectedFile = fileChooser.showOpenDialog(null);
         String fileExtension = getFileExtension(selectedFile);
-        if (!fileExtension.equals("srt")) {
+        if (!fileExtension.equals("srt") && !playlist.contains(selectedFile)) {
             playlist.add(selectedFile);
         }
 //        System.out.println(playlist);
