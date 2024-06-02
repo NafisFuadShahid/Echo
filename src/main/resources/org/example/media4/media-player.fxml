@@ -31,7 +31,7 @@
     <bottom>
         <VBox prefHeight="120.0" prefWidth="850.0" BorderPane.alignment="CENTER">
             <children>
-                <HBox alignment="TOP_CENTER" prefHeight="45.0" prefWidth="850.0">
+                <HBox fx:id="mediaControlBox" alignment="TOP_CENTER" prefHeight="45.0" prefWidth="850.0">
                     <children>
                         <Text fx:id="subtitleText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="841.13671875">
                             <font>
@@ -56,16 +56,27 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="22.0" prefWidth="850.0" spacing="10.0">
                     <children>
-                        <Label text="Volume">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
-                        <Slider id="volSlider" fx:id="volumeSlider" prefHeight="15.0" prefWidth="93.0" showTickLabels="true" translateY="3.0" value="75.0" />
-                        <Button id="open" mnemonicParsing="false" onAction="#selectMedia" text="Open" />
-                        <Button id="play" fx:id="btnPlay" mnemonicParsing="false" onMouseClicked="#btnPlay">
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Icon/high-volume.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                        <Slider id="volSlider" fx:id="volumeSlider" prefHeight="26.0" prefWidth="96.0" showTickLabels="true" translateY="3.0" value="75.0" />
+                        <Button id="open" mnemonicParsing="false" onAction="#selectMedia" prefHeight="26.0" prefWidth="26.0">
+                     <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Icon/folder.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                        <Button id="play" fx:id="btnPlay" mnemonicParsing="false" onMouseClicked="#btnPlay" prefWidth="34.0">
                             <graphic>
-                                <ImageView fitHeight="18.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="18.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@Icon/play.png" />
                                     </image>
@@ -74,7 +85,7 @@
                         </Button>
                         <Button id="restart" mnemonicParsing="false" onMouseClicked="#btnStop">
                             <graphic>
-                                <ImageView fitHeight="17.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="18.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@Icon/rewind.png" />
                                     </image>

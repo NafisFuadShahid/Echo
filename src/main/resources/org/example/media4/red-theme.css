@@ -2,11 +2,58 @@
     -fx-background-color: #F16C7A;
 }
 
+.button {
+    -fx-text-fill: white;
+    -fx-background-radius: 30;
+}
+
+#mainSlider .track{
+    -fx-background-color: #f6f4f1;
+    -fx-height: 20px;
+}
+
+#volSlider .track{
+    -fx-background-color: #faf8f8;
+}
+#open{
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+#play{
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+#seekback10{
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+#seekforward10{
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+#picker{
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+#restart{
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+
 #playlistView {
     -fx-opacity: 0;
     -fx-background-color: #F16C7A; /* Change background color as needed */
 }
 
 #playlistView:hover {
+    -fx-opacity: 1;
+}
+
+#mediaControlBox {
+    -fx-opacity: 0;
+    -fx-background-color: #F16C7A; /* Change background color as needed */
+}
+
+#mediaControlBox:hover {
     -fx-opacity: 1;
 }

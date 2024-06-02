@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -27,8 +28,11 @@ import java.util.*;
 public class MediaPlayerController implements Initializable {
 
 
-
     private Scene mainScene;
+
+    @FXML
+    private HBox mediaControlBox;
+
     @FXML
     private Label lbartist;
 
@@ -66,7 +70,7 @@ public class MediaPlayerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         themeChoiceBox.getItems().addAll(theme);
-        themeChoiceBox.setValue("Blue");
+        themeChoiceBox.setValue("Dark");
         themeChoiceBox.setOnAction(this::applyTheme);
 
 //        playlistView.setVisible(false);

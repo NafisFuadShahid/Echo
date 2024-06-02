@@ -1,12 +1,51 @@
 .root{
-    -fx-background-color: #87796F;
+    -fx-background-color: #2b2d30;
+}
+
+
+/* You may need to specifically target other text components, depending on your UI structure */
+.label {
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-text-fill: white;
+    -fx-background-radius: 30;
+}
+
+.text-field {
+    -fx-text-fill: #fcfafa;
+}
+
+.text-area {
+    -fx-text-fill: #ffffff;
+}
+
+.choice-box .label {
+    -fx-text-fill: black; /* Set the text color to black */
+}
+
+#picker{
+    -fx-background-color: #f5f5f6;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
 }
 
 #playlistView {
     -fx-opacity: 0;
-    -fx-background-color: #87796F; /* Change background color as needed */
+    -fx-background-color: #2b2d30; /* Change background color as needed */
 }
 
 #playlistView:hover {
+    -fx-opacity: 1;
+}
+
+
+#mediaControlBox {
+    -fx-opacity: 0;
+    -fx-background-color: #2b2d30; /* Change background color as needed */
+}
+
+#mediaControlBox:hover {
     -fx-opacity: 1;
 }

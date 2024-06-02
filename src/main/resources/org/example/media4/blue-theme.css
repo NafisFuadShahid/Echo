@@ -1,47 +1,54 @@
 .root{
     -fx-background-color: #4dc6cd;
 }
+
+.button {
+    -fx-text-fill: #057275;
+    -fx-background-color: #f6f9fa;
+    -fx-background-radius: 30;
+}
+
 #mainSlider .track{
-    -fx-background-color: #fdf500;
+    -fx-background-color: #f8eceb;
     -fx-height: 20px;
 }
 
 #volSlider .track{
-    -fx-background-color: #ef92b4;
+    -fx-background-color: #f1eaed;
 }
 #open{
-    -fx-background-color: #788bff;
+    -fx-background-color: #f0f3f6;
     -fx-background-radius: 30;
     -fx-background-insets: 0;
 }
 #play{
-    -fx-background-color: #788bff;
+    -fx-background-color: #f7f8fa;
     -fx-background-radius: 30;
     -fx-background-insets: 0;
 }
 #seekback10{
-    -fx-background-color: #788bff;
+    -fx-background-color: #f6f7f8;
     -fx-background-radius: 30;
     -fx-background-insets: 0;
 }
 #seekforward10{
-    -fx-background-color: #788bff;
+    -fx-background-color: #f3f4fa;
     -fx-background-radius: 30;
     -fx-background-insets: 0;
 }
 #picker{
-    -fx-background-color: #788bff;
+    -fx-background-color: #f7f8fd;
     -fx-background-radius: 30;
     -fx-background-insets: 0;
 }
 #restart{
-    -fx-background-color: #788bff;
+    -fx-background-color: #f3f4fa;
     -fx-background-radius: 30;
     -fx-background-insets: 0;
 }
 #picker{
-    -fx-background-color: #4169e1;
-    -fx-border: 1px peachpuff;
+    -fx-background-color: #f4f5f8;
+    -fx-border: 1px #f3eeea;
     -fx-background-radius: 30;
     -fx-background-insets: 0;
 }
@@ -52,5 +59,14 @@
 }
 
 #playlistView:hover {
+    -fx-opacity: 1;
+}
+
+#mediaControlBox {
+    -fx-opacity: 0;
+    -fx-background-color: #4dc6cd; /* Change background color as needed */
+}
+
+#mediaControlBox:hover {
     -fx-opacity: 1;
 }
