@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
@@ -453,85 +454,164 @@ public class MediaPlayerController implements Initializable {
             fileSelected = 1;
             String url = selectedFile.toURI().toString();
 
-
-            media = new Media(url);
             String fileName = selectedFile.getName(); // Get the name of the selected file
 
-            mediaPlayer = new MediaPlayer(media);
-            if(fileExtension.equals("mp3") || fileExtension.equals("wav")){
-                media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object> c) -> {
-                    if (c.wasAdded()) {
-                        if ("artist".equals(c.getKey())) {
-                            String  artist = c.getValueAdded().toString();
-                            lbartist.setText(artist);
-                        } else if ("title".equals(c.getKey())) {
-                            String title = c.getValueAdded().toString();
-                        } else if ("year".equals(c.getKey())) {
-                            String album = c.getValueAdded().toString();
-                            lbalbum.setText(album);
+            try {
+                media = new Media(url);
+                mediaPlayer = new MediaPlayer(media);
+                if(fileExtension.equals("mp3") || fileExtension.equals("wav")){
+                    media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object> c) -> {
+                        if (c.wasAdded()) {
+                            if ("artist".equals(c.getKey())) {
+                                String  artist = c.getValueAdded().toString();
+                                lbartist.setText(artist);
+                            } else if ("title".equals(c.getKey())) {
+                                String title = c.getValueAdded().toString();
+                            } else if ("year".equals(c.getKey())) {
+                                String album = c.getValueAdded().toString();
+                                lbalbum.setText(album);
+                            }
                         }
-                    }
+                    });
+                }
+                mediaView.setMediaPlayer(mediaPlayer);
+
+                // Set window title to the name of the file being played
+                Stage stage = (Stage) mediaView.getScene().getWindow();
+                stage.setTitle(fileName);
+
+                // Update media duration and slider max value when media is ready
+                mediaPlayer.setOnReady(() -> {
+                    Duration totalDuration = media.getDuration();
+                    slider.setMax(totalDuration.toSeconds());
+                    int hoursAtStart, secondsAtStart, minutesAtStart, totalSecsAtStart;
+                    String timeStringAtStart;
+                    totalSecsAtStart = (int) (int) totalDuration.toSeconds();
+                    hoursAtStart = totalSecsAtStart / 3600;
+                    minutesAtStart = (totalSecsAtStart % 3600) / 60;
+                    secondsAtStart = totalSecsAtStart % 60;
+                    timeStringAtStart = String.format("%02d:%02d:%02d", hoursAtStart, minutesAtStart, secondsAtStart);
+                    lblDuration.setText("Duration: 00 / " + timeStringAtStart);
                 });
+
+                // Bind volumeSlider to MediaPlayer volume property
+                mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty().divide(100.0));
+
+                // Set the initial volume of the media player
+                volumeSlider.setValue(75);
+
+                // Initialize volumeSlider with initial volume value of MediaPlayer
+                if (mediaPlayer != null) {
+                    double initialVolume = mediaPlayer.getVolume() * 100.0; // Convert volume range (0.0 - 1.0) to (0 - 100)
+                    volumeSlider.setValue(initialVolume);
+                }
+
+                // Add listener to update slider and lblDuration based on currentTime
+                mediaPlayer.currentTimeProperty().addListener((observableValue, oldValue, newValue) -> {
+                    slider.setValue(newValue.toSeconds());
+                    int hours, seconds, minutes, totalSecs;
+                    String timeString;
+                    totalSecs = (int) media.getDuration().toSeconds();
+                    hours = totalSecs / 3600;
+                    minutes = (totalSecs % 3600) / 60;
+                    seconds = totalSecs % 60;
+                    timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+                    int hoursNow, secondsNow, minutesNow, totalSecsNow;
+                    String timeStringNow;
+                    totalSecsNow = (int) slider.getValue();
+                    hoursNow = totalSecsNow / 3600;
+                    minutesNow = (totalSecsNow % 3600) / 60;
+                    secondsNow = totalSecsNow % 60;
+                    timeStringNow = String.format("%02d:%02d:%02d", hoursNow, minutesNow, secondsNow);
+                    displaySubtitle(newValue);
+
+                    lblDuration.setText("Duration: " + timeStringNow + " / " + timeString);
+                });
+
+                Scene scene = mediaView.getScene();
+                mediaView.fitWidthProperty().bind(scene.widthProperty());
+                mediaView.fitHeightProperty().bind(scene.heightProperty());
+                mediaPlayer.play();
+            }catch (MediaException e){
+                System.out.println("Error: Unsupported Media File " + e);
             }
-            mediaView.setMediaPlayer(mediaPlayer);
-
-            // Set window title to the name of the file being played
-            Stage stage = (Stage) mediaView.getScene().getWindow();
-            stage.setTitle(fileName);
-
-            // Update media duration and slider max value when media is ready
-            mediaPlayer.setOnReady(() -> {
-                Duration totalDuration = media.getDuration();
-                slider.setMax(totalDuration.toSeconds());
-                int hoursAtStart, secondsAtStart, minutesAtStart, totalSecsAtStart;
-                String timeStringAtStart;
-                totalSecsAtStart = (int) (int) totalDuration.toSeconds();
-                hoursAtStart = totalSecsAtStart / 3600;
-                minutesAtStart = (totalSecsAtStart % 3600) / 60;
-                secondsAtStart = totalSecsAtStart % 60;
-                timeStringAtStart = String.format("%02d:%02d:%02d", hoursAtStart, minutesAtStart, secondsAtStart);
-                lblDuration.setText("Duration: 00 / " + timeStringAtStart);
-            });
-
-            // Bind volumeSlider to MediaPlayer volume property
-            mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty().divide(100.0));
-
-            // Set the initial volume of the media player
-            volumeSlider.setValue(75);
-
-            // Initialize volumeSlider with initial volume value of MediaPlayer
-            if (mediaPlayer != null) {
-                double initialVolume = mediaPlayer.getVolume() * 100.0; // Convert volume range (0.0 - 1.0) to (0 - 100)
-                volumeSlider.setValue(initialVolume);
-            }
-
-            // Add listener to update slider and lblDuration based on currentTime
-            mediaPlayer.currentTimeProperty().addListener((observableValue, oldValue, newValue) -> {
-                slider.setValue(newValue.toSeconds());
-                int hours, seconds, minutes, totalSecs;
-                String timeString;
-                totalSecs = (int) media.getDuration().toSeconds();
-                hours = totalSecs / 3600;
-                minutes = (totalSecs % 3600) / 60;
-                seconds = totalSecs % 60;
-                timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-
-                int hoursNow, secondsNow, minutesNow, totalSecsNow;
-                String timeStringNow;
-                totalSecsNow = (int) slider.getValue();
-                hoursNow = totalSecsNow / 3600;
-                minutesNow = (totalSecsNow % 3600) / 60;
-                secondsNow = totalSecsNow % 60;
-                timeStringNow = String.format("%02d:%02d:%02d", hoursNow, minutesNow, secondsNow);
-                displaySubtitle(newValue);
-
-                lblDuration.setText("Duration: " + timeStringNow + " / " + timeString);
-            });
-
-            Scene scene = mediaView.getScene();
-            mediaView.fitWidthProperty().bind(scene.widthProperty());
-            mediaView.fitHeightProperty().bind(scene.heightProperty());
-            mediaPlayer.play();
+//            media = new Media(url);
+//            mediaPlayer = new MediaPlayer(media);
+//            if(fileExtension.equals("mp3") || fileExtension.equals("wav")){
+//                media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object> c) -> {
+//                    if (c.wasAdded()) {
+//                        if ("artist".equals(c.getKey())) {
+//                            String  artist = c.getValueAdded().toString();
+//                            lbartist.setText(artist);
+//                        } else if ("title".equals(c.getKey())) {
+//                            String title = c.getValueAdded().toString();
+//                        } else if ("year".equals(c.getKey())) {
+//                            String album = c.getValueAdded().toString();
+//                            lbalbum.setText(album);
+//                        }
+//                    }
+//                });
+//            }
+//            mediaView.setMediaPlayer(mediaPlayer);
+//
+//            // Set window title to the name of the file being played
+//            Stage stage = (Stage) mediaView.getScene().getWindow();
+//            stage.setTitle(fileName);
+//
+//            // Update media duration and slider max value when media is ready
+//            mediaPlayer.setOnReady(() -> {
+//                Duration totalDuration = media.getDuration();
+//                slider.setMax(totalDuration.toSeconds());
+//                int hoursAtStart, secondsAtStart, minutesAtStart, totalSecsAtStart;
+//                String timeStringAtStart;
+//                totalSecsAtStart = (int) (int) totalDuration.toSeconds();
+//                hoursAtStart = totalSecsAtStart / 3600;
+//                minutesAtStart = (totalSecsAtStart % 3600) / 60;
+//                secondsAtStart = totalSecsAtStart % 60;
+//                timeStringAtStart = String.format("%02d:%02d:%02d", hoursAtStart, minutesAtStart, secondsAtStart);
+//                lblDuration.setText("Duration: 00 / " + timeStringAtStart);
+//            });
+//
+//            // Bind volumeSlider to MediaPlayer volume property
+//            mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty().divide(100.0));
+//
+//            // Set the initial volume of the media player
+//            volumeSlider.setValue(75);
+//
+//            // Initialize volumeSlider with initial volume value of MediaPlayer
+//            if (mediaPlayer != null) {
+//                double initialVolume = mediaPlayer.getVolume() * 100.0; // Convert volume range (0.0 - 1.0) to (0 - 100)
+//                volumeSlider.setValue(initialVolume);
+//            }
+//
+//            // Add listener to update slider and lblDuration based on currentTime
+//            mediaPlayer.currentTimeProperty().addListener((observableValue, oldValue, newValue) -> {
+//                slider.setValue(newValue.toSeconds());
+//                int hours, seconds, minutes, totalSecs;
+//                String timeString;
+//                totalSecs = (int) media.getDuration().toSeconds();
+//                hours = totalSecs / 3600;
+//                minutes = (totalSecs % 3600) / 60;
+//                seconds = totalSecs % 60;
+//                timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+//
+//                int hoursNow, secondsNow, minutesNow, totalSecsNow;
+//                String timeStringNow;
+//                totalSecsNow = (int) slider.getValue();
+//                hoursNow = totalSecsNow / 3600;
+//                minutesNow = (totalSecsNow % 3600) / 60;
+//                secondsNow = totalSecsNow % 60;
+//                timeStringNow = String.format("%02d:%02d:%02d", hoursNow, minutesNow, secondsNow);
+//                displaySubtitle(newValue);
+//
+//                lblDuration.setText("Duration: " + timeStringNow + " / " + timeString);
+//            });
+//
+//            Scene scene = mediaView.getScene();
+//            mediaView.fitWidthProperty().bind(scene.widthProperty());
+//            mediaView.fitHeightProperty().bind(scene.heightProperty());
+//            mediaPlayer.play();
         }
     }
 
