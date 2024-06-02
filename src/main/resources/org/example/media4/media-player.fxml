@@ -56,9 +56,9 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="22.0" prefWidth="850.0" spacing="10.0">
                     <children>
-                  <Button mnemonicParsing="false">
+                  <Button fx:id="volumeOnOff" mnemonicParsing="false" onMouseClicked="#volumeChanger">
                      <graphic>
-                        <ImageView fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="muteOnOffView" fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@Icon/high-volume.png" />
                            </image>
@@ -76,7 +76,7 @@
                      </graphic></Button>
                         <Button id="play" fx:id="btnPlay" mnemonicParsing="false" onMouseClicked="#btnPlay" prefWidth="34.0">
                             <graphic>
-                                <ImageView fitHeight="18.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fx:id="playPauseImageView" fitHeight="18.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@Icon/play-button.png" />
                                     </image>

@@ -8,6 +8,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
@@ -63,6 +65,9 @@ public class MediaPlayerController implements Initializable {
     private Button btnBackward;
 
     @FXML
+    private Button volumeOnOff;
+
+    @FXML
     private ChoiceBox<String> themeChoiceBox;
     @FXML
     private ChoiceBox<String> subSync;
@@ -111,6 +116,14 @@ public class MediaPlayerController implements Initializable {
                 playSelectedMedia(newValue);
             }
         });
+
+        // Load the images
+        playImage = new Image(getClass().getResourceAsStream("/org/example/media4/Icon/play-button.png"));
+        pauseImage = new Image(getClass().getResourceAsStream("/org/example/media4/Icon/pause.png"));
+
+        muteImage = new Image(getClass().getResourceAsStream("/org/example/media4/Icon/mute.png"));
+        volubleImage = new Image(getClass().getResourceAsStream("/org/example/media4/Icon/high-volume.png"));
+
     }
 
     @FXML
@@ -267,6 +280,12 @@ public class MediaPlayerController implements Initializable {
     private Media media;
     private MediaPlayer mediaPlayer;
 
+    @FXML
+    private ImageView playPauseImageView;
+
+    private Image playImage;
+    private Image pauseImage;
+
     private boolean isPlayed = false;
 
     @FXML
@@ -283,10 +302,12 @@ public class MediaPlayerController implements Initializable {
 
         if (!isPlayed) {
 //            btnPlay.setText("Pause");
+            playPauseImageView.setImage(playImage);
             mediaPlayer.play();
             isPlayed = true;
         } else {
 //            btnPlay.setText("Play");
+            playPauseImageView.setImage(pauseImage);
             mediaPlayer.pause();
             isPlayed = false;
         }
@@ -523,6 +544,27 @@ public class MediaPlayerController implements Initializable {
 //        playlistView.setOnMouseExited((MouseEvent even) -> {
 //            playlistView.setVisible(false);
 //        });
+
+    private Image muteImage;
+    private Image volubleImage;
+
+    @FXML
+    private ImageView muteOnOffView;
+
+    private boolean isMute = false;
+    @FXML
+    private void volumeChanger(MouseEvent event) {
+        if(!isMute) {
+            volumeSlider.setValue(0);
+            muteOnOffView.setImage(muteImage);
+            isMute = true;
+        }
+        else {
+            volumeSlider.setValue(75);
+            muteOnOffView.setImage(volubleImage);
+            isMute = false;
+        }
+    }
 
 
     @FXML
