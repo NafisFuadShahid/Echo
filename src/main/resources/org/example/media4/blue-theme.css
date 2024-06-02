@@ -11,23 +11,37 @@
 }
 #open{
     -fx-background-color: #788bff;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
 }
 #play{
     -fx-background-color: #788bff;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
 }
 #seekback10{
     -fx-background-color: #788bff;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
 }
 #seekforward10{
     -fx-background-color: #788bff;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
 }
 #picker{
     -fx-background-color: #788bff;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
 }
 #restart{
     -fx-background-color: #788bff;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
 }
 #picker{
     -fx-background-color: #4169e1;
     -fx-border: 1px peachpuff;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
 }
