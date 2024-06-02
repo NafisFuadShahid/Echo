@@ -322,36 +322,45 @@ public class MediaPlayerController implements Initializable {
     }
 
 
-
     @FXML
     void selectMedia(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open");
         File selectedFile = fileChooser.showOpenDialog(null);
-
-        if (selectedFile == null) {
-            return; // User canceled the file chooser dialog
-        }
-
         String fileExtension = getFileExtension(selectedFile);
-
         if (!fileExtension.equals("srt")) {
             playlist.add(selectedFile);
         }
-
+//        System.out.println(playlist);
+//        System.out.println(selectedFile);
         ObservableList<File> observablePlaylist = FXCollections.observableArrayList(playlist);
+
+        // Set the ObservableList as the items of the ListView
         playlistView.setItems(observablePlaylist);
+
+//        // Hide the ListView initially
+//        playlistView.setVisible(false);
+
+//        // Show the ListView on mouse entered
+//        playlistView.setOnMouseEntered((MouseEvent even) -> {
+//            playlistView.setVisible(true);
+//        });
+//
+//        // Hide the ListView on mouse exited
+//        playlistView.setOnMouseExited((MouseEvent even) -> {
+//            playlistView.setVisible(false);
+//        });
 
         if (fileExtension.equals("srt")) {
             loadSubtitles(selectedFile);
-        } else {
-            // Stop and dispose of the current media player if it exists
-            if (mediaPlayer != null) {
-                mediaPlayer.stop();
-                mediaPlayer.dispose();
-            }
 
+        }
+
+        if (selectedFile != null && fileExtension != "srt") {
+            fileSelected = 1;
             String url = selectedFile.toURI().toString();
+
+
             media = new Media(url);
             String fileName = selectedFile.getName(); // Get the name of the selected file
 
@@ -360,7 +369,7 @@ public class MediaPlayerController implements Initializable {
                 media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object> c) -> {
                     if (c.wasAdded()) {
                         if ("artist".equals(c.getKey())) {
-                            String artist = c.getValueAdded().toString();
+                            String  artist = c.getValueAdded().toString();
                             lbartist.setText(artist);
                         } else if ("title".equals(c.getKey())) {
                             String title = c.getValueAdded().toString();
@@ -432,7 +441,6 @@ public class MediaPlayerController implements Initializable {
             mediaPlayer.play();
         }
     }
-
 
     //        // Show the ListView on mouse entered
 //        playlistView.setOnMouseEntered((MouseEvent even) -> {
