@@ -97,7 +97,7 @@
                             <graphic>
                                 <ImageView fitHeight="16.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@Icon/backward.png" />
+                                        <Image url="@Icon/Backward.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
