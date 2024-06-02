@@ -64,14 +64,22 @@ public class MediaPlayerController implements Initializable {
 
     @FXML
     private ChoiceBox<String> themeChoiceBox;
+    @FXML
+    private ChoiceBox<String> subSync;
 
     private final String[] theme = {"Dark", "Green", "Blue", "Red"};
+
+    private final String[] sync = {"+.5", "+1", "-.5", "-1"};
     private int fileSelected = 0;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         themeChoiceBox.getItems().addAll(theme);
         themeChoiceBox.setValue("Dark");
         themeChoiceBox.setOnAction(this::applyTheme);
+
+        subSync.getItems().addAll(sync);
+        subSync.setOnAction(this::applySync);
+
 
 //        playlistView.setVisible(false);
 
@@ -105,6 +113,64 @@ public class MediaPlayerController implements Initializable {
         });
     }
 
+    @FXML
+    private void applySync(ActionEvent event) {
+        String syncChoice = subSync.getValue();
+        int syncTime = 0;
+
+        switch (syncChoice) {
+            case "+.5":
+                syncTime = 500; // 0.5 seconds in milliseconds
+                break;
+            case "+1":
+                syncTime = 1000; // 1 second in milliseconds
+                break;
+            case "-.5":
+                syncTime = -500; // -0.5 seconds in milliseconds
+                break;
+            case "-1":
+                syncTime = -1000; // -1 second in milliseconds
+                break;
+            // Add more cases as needed
+        }
+
+        // Apply sync time to the subtitle
+        if (!subtitleTimes.isEmpty() && mediaPlayer != null) {
+            // Get current media time
+            Duration currentMediaTime = mediaPlayer.getCurrentTime();
+
+            // Find the nearest subtitle time after the current media time
+            Duration nearestSubtitleTime = null;
+            for (Duration subtitleTime : subtitleTimes.values()) {
+                if (subtitleTime.greaterThan(currentMediaTime)) {
+                    nearestSubtitleTime = subtitleTime;
+                    break;
+                }
+            }
+
+            if (nearestSubtitleTime != null) {
+                // Calculate new subtitle time
+                Duration newSubtitleTime = nearestSubtitleTime.add(Duration.millis(syncTime));
+
+                // Display the new subtitle text
+                displaySubtitleForTime(newSubtitleTime);
+            }
+        }
+    }
+
+    private void displaySubtitleForTime(Duration time) {
+        for (Map.Entry<Integer, Duration> entry : subtitleTimes.entrySet()) {
+            if (time.greaterThanOrEqualTo(entry.getValue())) {
+                // Find the subtitle corresponding to the current time
+                int subtitleNumber = entry.getKey();
+                String subtitle = subtitles.get(subtitleNumber);
+                subtitleText.setText(subtitle);
+            }
+        }
+    }
+
+
+
 
     @FXML
     void applyTheme(ActionEvent event) {
@@ -125,6 +191,8 @@ public class MediaPlayerController implements Initializable {
             // Add more themes as needed
         }
     }
+
+
     private Map<Integer, String> subtitles = new HashMap<>(); // Map to store subtitle texts with their sequence numbers
     private Map<Integer, Duration> subtitleTimes = new HashMap<>(); // Map to store subtitle timings
     private void loadSubtitles(File srtFile) {
@@ -462,13 +530,24 @@ public class MediaPlayerController implements Initializable {
         mediaPlayer.seek(Duration.seconds(slider.getValue()));
     }
     private void displaySubtitle(Duration currentTime) {
+        // Initialize a variable to keep track of the currently displayed subtitle
+        String currentSubtitle = null;
+
+        // Iterate through subtitleTimes to find the appropriate subtitle
         for (Map.Entry<Integer, Duration> entry : subtitleTimes.entrySet()) {
             if (currentTime.greaterThanOrEqualTo(entry.getValue())) {
                 // Find the subtitle corresponding to the current time
                 int subtitleNumber = entry.getKey();
-                String subtitle = subtitles.get(subtitleNumber);
-                subtitleText.setText(subtitle);
+                currentSubtitle = subtitles.get(subtitleNumber);
+            } else {
+                // Stop once we've found the first subtitle that hasn't appeared yet
+                break;
             }
+        }
+
+        // Update the subtitle text only if it has changed
+        if (currentSubtitle != null && !currentSubtitle.equals(subtitleText.getText())) {
+            subtitleText.setText(currentSubtitle);
         }
     }
 
