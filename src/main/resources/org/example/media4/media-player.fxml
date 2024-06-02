@@ -20,7 +20,7 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.media4.MediaPlayerController">
     <center>
         <StackPane prefWidth="850.0">
-            <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" nodeOrientation="INHERIT" />
+            <MediaView fx:id="mediaView" fitHeight="150.0" fitWidth="200.0" nodeOrientation="INHERIT" />
             <AnchorPane prefHeight="200.0" prefWidth="841.0" StackPane.alignment="CENTER_RIGHT">
                 <children>
                     <ListView fx:id="playlistView" layoutX="668.0" layoutY="63.0" prefHeight="417.0" prefWidth="184.0" AnchorPane.rightAnchor="10.0" />
@@ -111,8 +111,10 @@
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Label text="Change Theme" />
-                        <ChoiceBox id="picker" fx:id="themeChoiceBox" prefWidth="150.0" />
+                  <Label prefHeight="19.0" prefWidth="52.0" text="SubSync" />
+                  <ChoiceBox fx:id="subSync" prefHeight="27.0" prefWidth="66.0" />
+                        <Label text="Theme" />
+                        <ChoiceBox id="picker" fx:id="themeChoiceBox" prefHeight="27.0" prefWidth="88.0" />
                     </children>
                 </HBox>
             </children>
