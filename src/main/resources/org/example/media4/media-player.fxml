@@ -90,7 +90,7 @@
                   </Button>
                   <Label text="Change Theme" />
                   <ChoiceBox id="picker" fx:id="themeChoiceBox" prefWidth="150.0" />
-
+                        
                     </children>
                 </HBox>
             </children>
@@ -99,7 +99,7 @@
    <right>
       <VBox prefHeight="491.0" prefWidth="219.0" BorderPane.alignment="CENTER">
          <children>
-            <ListView fx:id="playlistView" prefHeight="492.0" prefWidth="219.0" />
+            <ListView fx:id="playlistView" prefHeight="511.0" prefWidth="219.0" />
          </children>
       </VBox>
    </right>

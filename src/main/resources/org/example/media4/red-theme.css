@@ -1,3 +1,12 @@
 .root{
     -fx-background-color: #F16C7A;
 }
+
+#playlistView {
+    -fx-opacity: 0;
+    -fx-background-color: #F16C7A; /* Change background color as needed */
+}
+
+#playlistView:hover {
+    -fx-opacity: 1;
+}
