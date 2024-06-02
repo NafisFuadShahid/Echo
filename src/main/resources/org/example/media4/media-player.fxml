@@ -78,7 +78,7 @@
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@Icon/play.png" />
+                                        <Image url="@Icon/play-button.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
@@ -106,7 +106,7 @@
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@Icon/forward.png" />
+                                        <Image url="@Icon/fast-forward.png" />
                                     </image>
                                 </ImageView>
                             </graphic>

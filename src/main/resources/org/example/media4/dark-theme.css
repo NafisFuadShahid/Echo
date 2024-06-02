@@ -41,11 +41,11 @@
 }
 
 
-#mediaControlBox {
-    -fx-opacity: 0;
-    -fx-background-color: #2b2d30; /* Change background color as needed */
-}
+/*#mediaControlBox {*/
+/*    -fx-opacity: 0;*/
+/*    -fx-background-color: #2b2d30; !* Change background color as needed *!*/
+/*}*/
 
-#mediaControlBox:hover {
-    -fx-opacity: 1;
-}
+/*#mediaControlBox:hover {*/
+/*    -fx-opacity: 1;*/
+/*}*/
