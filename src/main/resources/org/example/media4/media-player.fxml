@@ -23,7 +23,7 @@
             <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" nodeOrientation="INHERIT" />
             <AnchorPane prefHeight="200.0" prefWidth="841.0" StackPane.alignment="CENTER_RIGHT">
                 <children>
-                    <ListView fx:id="playlistView" layoutX="668.0" layoutY="63.0" prefHeight="432.0" prefWidth="184.0" AnchorPane.rightAnchor="10.0" />
+                    <ListView fx:id="playlistView" layoutX="668.0" layoutY="63.0" prefHeight="417.0" prefWidth="184.0" AnchorPane.rightAnchor="10.0" />
                 </children>
             </AnchorPane>
         </StackPane>

@@ -31,6 +31,10 @@
     -fx-background-insets: 0;
 }
 
+#subtitleText .label {
+    -fx-text-fill: white;
+}
+
 #playlistView {
     -fx-opacity: 0;
     -fx-background-color: #2b2d30; /* Change background color as needed */
