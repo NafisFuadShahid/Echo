@@ -1,6 +1,8 @@
 package org.example.media4;
 
+import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,10 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MediaPlayerController implements Initializable {
 
@@ -69,6 +68,18 @@ public class MediaPlayerController implements Initializable {
         themeChoiceBox.getItems().addAll(theme);
         themeChoiceBox.setValue("Blue");
         themeChoiceBox.setOnAction(this::applyTheme);
+
+//        playlistView.setVisible(false);
+
+//        // Show the ListView on mouse entered
+//        playlistView.setOnMouseEntered((MouseEvent event) -> {
+//            playlistView.setVisible(true);
+//        });
+//
+//        // Hide the ListView on mouse exited
+//        playlistView.setOnMouseExited((MouseEvent event) -> {
+//            playlistView.setVisible(false);
+//        });
     }
 
     @FXML
@@ -225,12 +236,51 @@ public class MediaPlayerController implements Initializable {
         String fileName = file.getName();
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
+
+    ArrayList<File> playlist = new ArrayList<>();
+
+    @FXML
+    private ListView<File> playlistView;
+
+    @FXML
+    void showplaylist(ActionEvent event) {
+        playlistView.setVisible(true);
+    }
+
+    @FXML
+    void donotshowplaylist(ActionEvent event) {
+        playlistView.setVisible(false);
+    }
+
     @FXML
     void selectMedia(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open");
         File selectedFile = fileChooser.showOpenDialog(null);
         String fileExtension = getFileExtension(selectedFile);
+        if (!fileExtension.equals("srt")) {
+            playlist.add(selectedFile);
+        }
+//        System.out.println(playlist);
+//        System.out.println(selectedFile);
+        ObservableList<File> observablePlaylist = FXCollections.observableArrayList(playlist);
+
+        // Set the ObservableList as the items of the ListView
+        playlistView.setItems(observablePlaylist);
+
+//        // Hide the ListView initially
+//        playlistView.setVisible(false);
+
+//        // Show the ListView on mouse entered
+//        playlistView.setOnMouseEntered((MouseEvent even) -> {
+//            playlistView.setVisible(true);
+//        });
+//
+//        // Hide the ListView on mouse exited
+//        playlistView.setOnMouseExited((MouseEvent even) -> {
+//            playlistView.setVisible(false);
+//        });
+
         if (fileExtension.equals("srt")) {
             loadSubtitles(selectedFile);
 
@@ -321,6 +371,18 @@ public class MediaPlayerController implements Initializable {
             mediaPlayer.play();
         }
     }
+
+    //        // Show the ListView on mouse entered
+//        playlistView.setOnMouseEntered((MouseEvent even) -> {
+//            playlistView.setVisible(true);
+//        });
+//
+//        // Hide the ListView on mouse exited
+//        playlistView.setOnMouseExited((MouseEvent even) -> {
+//            playlistView.setVisible(false);
+//        });
+
+
     @FXML
     private void sliderPressed(MouseEvent event) {
         mediaPlayer.seek(Duration.seconds(slider.getValue()));
