@@ -80,6 +80,20 @@ public class MediaPlayerController implements Initializable {
 //        playlistView.setOnMouseExited((MouseEvent event) -> {
 //            playlistView.setVisible(false);
 //        });
+
+        // Set custom cell factory to show only the file name
+        playlistView.setCellFactory(param -> new ListCell<File>() {
+            @Override
+            protected void updateItem(File file, boolean empty) {
+                super.updateItem(file, empty);
+                if (empty || file == null) {
+                    setText(null);
+                } else {
+                    setText(file.getName());
+                }
+            }
+        });
+
         playlistView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 playSelectedMedia(newValue);
