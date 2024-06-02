@@ -49,6 +49,10 @@
     -fx-opacity: 1;
 }
 
+#subtitleText {
+    -fx-fill: white;
+}
+
 /*#mediaControlBox {*/
 /*    -fx-opacity: 0;*/
 /*    -fx-background-color: #8bc7bb; !* Change background color as needed *!*/

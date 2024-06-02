@@ -31,8 +31,8 @@
     -fx-background-insets: 0;
 }
 
-#subtitleText .label {
-    -fx-text-fill: white;
+#subtitleText {
+    -fx-fill: white;
 }
 
 #playlistView {
@@ -43,6 +43,7 @@
 #playlistView:hover {
     -fx-opacity: 1;
 }
+
 
 
 /*#mediaControlBox {*/
