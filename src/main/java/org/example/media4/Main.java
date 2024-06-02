@@ -43,7 +43,7 @@ public class Main extends Application {
         stage.setTitle("Echo");
         stage.setScene(scene);
         //stage.setFullScreen(true);
-        //stage.setMaximized(true);
+        stage.setMaximized(true);
         stage.show();
     }
 

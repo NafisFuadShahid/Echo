@@ -80,7 +80,13 @@ public class MediaPlayerController implements Initializable {
 //        playlistView.setOnMouseExited((MouseEvent event) -> {
 //            playlistView.setVisible(false);
 //        });
+        playlistView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                playSelectedMedia(newValue);
+            }
+        });
     }
+
 
     @FXML
     void applyTheme(ActionEvent event) {
@@ -251,6 +257,56 @@ public class MediaPlayerController implements Initializable {
     void donotshowplaylist(ActionEvent event) {
         playlistView.setVisible(false);
     }
+
+    private void playSelectedMedia(File selectedFile) {
+        if (selectedFile != null) {
+            String fileExtension = getFileExtension(selectedFile);
+
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+            }
+
+            String url = selectedFile.toURI().toString();
+            media = new Media(url);
+            mediaPlayer = new MediaPlayer(media);
+            mediaView.setMediaPlayer(mediaPlayer);
+
+            // Update window title with the name of the selected file
+            Stage stage = (Stage) mediaView.getScene().getWindow();
+            stage.setTitle(selectedFile.getName());
+
+            // Update media duration and slider max value when media is ready
+            mediaPlayer.setOnReady(() -> {
+                Duration totalDuration = media.getDuration();
+                slider.setMax(totalDuration.toSeconds());
+                updateDurationLabel(totalDuration);
+            });
+
+            // Bind volume slider to media player volume property
+            mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty().divide(100.0));
+            volumeSlider.setValue(75);
+
+            mediaPlayer.currentTimeProperty().addListener((observableValue, oldValue, newValue) -> {
+                slider.setValue(newValue.toSeconds());
+                updateDurationLabel(media.getDuration());
+                displaySubtitle(newValue);
+            });
+
+            Scene scene = mediaView.getScene();
+            mediaView.fitWidthProperty().bind(scene.widthProperty());
+            mediaView.fitHeightProperty().bind(scene.heightProperty());
+            mediaPlayer.play();
+        }
+    }
+
+    private void updateDurationLabel(Duration totalDuration) {
+        int hours = (int) totalDuration.toHours();
+        int minutes = (int) (totalDuration.toMinutes() % 60);
+        int seconds = (int) (totalDuration.toSeconds() % 60);
+        String durationString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        lblDuration.setText("Duration: 00:00:00 / " + durationString);
+    }
+
 
     @FXML
     void selectMedia(ActionEvent event) throws IOException {

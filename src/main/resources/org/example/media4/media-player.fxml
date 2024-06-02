@@ -90,7 +90,7 @@
                   </Button>
                   <Label text="Change Theme" />
                   <ChoiceBox id="picker" fx:id="themeChoiceBox" prefWidth="150.0" />
-                        
+
                     </children>
                 </HBox>
             </children>
