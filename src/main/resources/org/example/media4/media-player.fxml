@@ -115,7 +115,14 @@
                   <ChoiceBox fx:id="subSync" prefHeight="27.0" prefWidth="66.0" />
                         <Label text="Theme" />
                         <ChoiceBox id="picker" fx:id="themeChoiceBox" prefHeight="27.0" prefWidth="88.0" />
-                  <Button fx:id="SubOnOff" mnemonicParsing="false" onMouseClicked="#subOnOff" text="SubOnOff" />
+                  <Button fx:id="SubOnOff" mnemonicParsing="false" onMouseClicked="#subOnOff">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Icon/transcript.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                     </children>
                 </HBox>
             </children>
