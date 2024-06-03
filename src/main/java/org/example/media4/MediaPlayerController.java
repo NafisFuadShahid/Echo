@@ -1,5 +1,6 @@
 package org.example.media4;
 
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -74,7 +75,7 @@ public class MediaPlayerController implements Initializable {
     private ChoiceBox<String> subSync;
 
     private final String[] theme = {"Dark", "Green", "Blue", "Red"};
-
+    private int subActive = 0;
     private final String[] sync = {"+.5", "+1", "-.5", "-1"};
     private int fileSelected = 0;
     @Override
@@ -370,8 +371,26 @@ public class MediaPlayerController implements Initializable {
         if (selectedFile != null) {
             String fileExtension = getFileExtension(selectedFile);
 
+            // Clear subtitles before loading new subtitles
+            subtitles.clear();
+            subtitleTimes.clear();
+            subtitleText.setText("");
+            // Clear audio tags
+            lbartist.setText("");
+            lbalbum.setText("");
+            // Clear the file selected flag
+            fileSelected = 0;
+
+            // Load subtitles if the file is an SRT file
+            if (fileExtension.equals("srt")) {
+                loadSubtitles(selectedFile);
+                subActive = 1;
+                return;
+            }
+
             if (mediaPlayer != null) {
                 mediaPlayer.stop();
+                mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
             }
 
             String url = selectedFile.toURI().toString();
@@ -394,11 +413,7 @@ public class MediaPlayerController implements Initializable {
             mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty().divide(100.0));
             volumeSlider.setValue(75);
 
-            mediaPlayer.currentTimeProperty().addListener((observableValue, oldValue, newValue) -> {
-                slider.setValue(newValue.toSeconds());
-                updateDurationLabel(media.getDuration());
-                displaySubtitle(newValue);
-            });
+            mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
 
             Scene scene = mediaView.getScene();
             mediaView.fitWidthProperty().bind(scene.widthProperty());
@@ -407,13 +422,28 @@ public class MediaPlayerController implements Initializable {
         }
     }
 
+    private final ChangeListener<Duration> currentTimeListener = (observableValue, oldValue, newValue) -> {
+        slider.setValue(newValue.toSeconds());
+        updateDurationLabel(media.getDuration());
+        displaySubtitle(newValue);
+    };
+
     private void updateDurationLabel(Duration totalDuration) {
         int hours = (int) totalDuration.toHours();
         int minutes = (int) (totalDuration.toMinutes() % 60);
         int seconds = (int) (totalDuration.toSeconds() % 60);
         String durationString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-        lblDuration.setText("Duration: 00:00:00 / " + durationString);
-    }
+
+        int hoursNow = (int) slider.getValue() / 3600;
+        int minutesNow = ((int) slider.getValue() % 3600) / 60;
+        int secondsNow = (int) slider.getValue() % 60;
+        String currentTimeString = String.format("%02d:%02d:%02d", hoursNow, minutesNow, secondsNow);
+
+        lblDuration.setText("Duration: " + currentTimeString + " / " + durationString);
+    };
+
+
+
 
 
     @FXML
@@ -528,7 +558,7 @@ public class MediaPlayerController implements Initializable {
 
                     lblDuration.setText("Duration: " + timeStringNow + " / " + timeString);
                 });
-
+                if(subActive == 1){subtitleText.setText(""); subActive = 0;}
                 Scene scene = mediaView.getScene();
                 mediaView.fitWidthProperty().bind(scene.widthProperty());
                 mediaView.fitHeightProperty().bind(scene.heightProperty());
@@ -674,3 +704,4 @@ public class MediaPlayerController implements Initializable {
     }
 
 }
+
