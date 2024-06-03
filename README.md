@@ -24,3 +24,4 @@ Echo is a simple media player built with JavaFX
 
 ## Interface
 
+![WhatsApp Image 2024-06-03 at 13 33 59_1b754210](https://github.com/NafisFuadShahid/Echo/assets/96487710/d3173848-fc9d-4209-abac-6f51c0f2e718)
