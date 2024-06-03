@@ -348,6 +348,9 @@ public class MediaPlayerController implements Initializable {
     }
 
     private String getFileExtension(File file) {
+        if (file == null) {
+            throw new IllegalArgumentException("File cannot be null");
+        }
         String fileName = file.getName();
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
@@ -425,7 +428,9 @@ public class MediaPlayerController implements Initializable {
     private final ChangeListener<Duration> currentTimeListener = (observableValue, oldValue, newValue) -> {
         slider.setValue(newValue.toSeconds());
         updateDurationLabel(media.getDuration());
-        displaySubtitle(newValue);
+        if(subActive == 0) {
+            displaySubtitle(newValue);
+        }
     };
 
     private void updateDurationLabel(Duration totalDuration) {
@@ -554,7 +559,9 @@ public class MediaPlayerController implements Initializable {
                     minutesNow = (totalSecsNow % 3600) / 60;
                     secondsNow = totalSecsNow % 60;
                     timeStringNow = String.format("%02d:%02d:%02d", hoursNow, minutesNow, secondsNow);
-                    displaySubtitle(newValue);
+                    if(subActive == 0) {
+                        displaySubtitle(newValue);
+                    }
 
                     lblDuration.setText("Duration: " + timeStringNow + " / " + timeString);
                 });
@@ -700,6 +707,21 @@ public class MediaPlayerController implements Initializable {
         // Update the subtitle text only if it has changed
         if (currentSubtitle != null && !currentSubtitle.equals(subtitleText.getText())) {
             subtitleText.setText(currentSubtitle);
+        }
+    }
+
+    @FXML
+    private Button SubOnOff;
+
+    @FXML
+    private void subOnOff(MouseEvent event) {
+        if(subActive == 1){
+//            subtitleText.setText("");
+            subActive = 0;
+        }
+        else{
+            subtitleText.setText("");
+            subActive = 1;
         }
     }
 

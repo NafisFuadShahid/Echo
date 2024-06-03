@@ -35,6 +35,11 @@
     -fx-fill: white;
 }
 
+#subOnOff {
+    -fx-text-fill: black;          /* Sets the text color to black */
+    -fx-background-color: white; /* Sets the background color to white */
+}
+
 #playlistView {
     -fx-opacity: 0;
     -fx-background-color: #2b2d30; /* Change background color as needed */
