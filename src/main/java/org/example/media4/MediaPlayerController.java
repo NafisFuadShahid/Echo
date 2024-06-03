@@ -69,17 +69,24 @@ public class MediaPlayerController implements Initializable {
     @FXML
     private Button volumeOnOff;
 
-    @FXML
-    private ChoiceBox<String> themeChoiceBox;
+
     @FXML
     private ChoiceBox<String> subSync;
 
-    private final String[] theme = {"Dark", "Green", "Blue", "Red"};
     private int subActive = 0;
+
     private final String[] sync = {"+.5", "+1", "-.5", "-1"};
+
+    @FXML
+    private ChoiceBox<String> themeChoiceBox;
+    private final String[] theme = {"Dark", "Green", "Blue", "Red"};
+
+
     private int fileSelected = 0;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        //intializing the theme choice box
         themeChoiceBox.getItems().addAll(theme);
         themeChoiceBox.setValue("Dark");
         themeChoiceBox.setOnAction(this::applyTheme);
@@ -88,18 +95,7 @@ public class MediaPlayerController implements Initializable {
         subSync.setOnAction(this::applySync);
 
 
-//        playlistView.setVisible(false);
-
-//        // Show the ListView on mouse entered
-//        playlistView.setOnMouseEntered((MouseEvent event) -> {
-//            playlistView.setVisible(true);
-//        });
-//
-//        // Hide the ListView on mouse exited
-//        playlistView.setOnMouseExited((MouseEvent event) -> {
-//            playlistView.setVisible(false);
-//        });
-
+        // functionality of playListView
         // Set custom cell factory to show only the file name
         playlistView.setCellFactory(param -> new ListCell<File>() {
             @Override
@@ -119,7 +115,7 @@ public class MediaPlayerController implements Initializable {
             }
         });
 
-        // Load the images
+        // Load the necessary images
         playImage = new Image(getClass().getResourceAsStream("/org/example/media4/Icon/play-button.png"));
         pauseImage = new Image(getClass().getResourceAsStream("/org/example/media4/Icon/pause.png"));
 
@@ -128,6 +124,57 @@ public class MediaPlayerController implements Initializable {
 
     }
 
+    // Function set the main scene
+    public void setMainScene(Scene scene) {
+        this.mainScene = scene;
+    }
+
+    // Function to apply the selected theme
+    @FXML
+    void applyTheme(ActionEvent event) {
+        String selectedTheme = themeChoiceBox.getValue();
+        switch (selectedTheme) {
+            case "Green":
+                changeThemeToGreen();
+                break;
+            case "Dark":
+                changeThemeToDark();
+                break;
+            case "Blue":
+                changeThemeToBlue();
+                break;
+            case "Red":
+                changeThemeToRed();
+                break;
+            // Add more themes as needed
+        }
+    }
+
+    @FXML
+    void changeThemeToGreen() {
+        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().add(getClass().getResource("green-theme.css").toExternalForm());
+    }
+
+    @FXML
+    void changeThemeToDark() {
+        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().add(getClass().getResource("dark-theme.css").toExternalForm());
+    }
+
+    @FXML
+    void changeThemeToBlue() {
+        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().add(getClass().getResource("blue-theme.css").toExternalForm());
+    }
+
+    @FXML
+    void changeThemeToRed() {
+        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().add(getClass().getResource("red-theme.css").toExternalForm());
+    }
+
+    // Function to apply subtitle sync
     @FXML
     private void applySync(ActionEvent event) {
         String syncChoice = subSync.getValue();
@@ -185,29 +232,6 @@ public class MediaPlayerController implements Initializable {
     }
 
 
-
-
-    @FXML
-    void applyTheme(ActionEvent event) {
-        String selectedTheme = themeChoiceBox.getValue();
-        switch (selectedTheme) {
-            case "Green":
-                changeThemeToGreen();
-                break;
-            case "Dark":
-                changeThemeToDark();
-                break;
-            case "Blue":
-                changeThemeToBlue();
-                break;
-            case "Red":
-                changeThemeToRed();
-                break;
-            // Add more themes as needed
-        }
-    }
-
-
     private Map<Integer, String> subtitles = new HashMap<>(); // Map to store subtitle texts with their sequence numbers
     private Map<Integer, Duration> subtitleTimes = new HashMap<>(); // Map to store subtitle timings
     private void loadSubtitles(File srtFile) {
@@ -252,33 +276,7 @@ public class MediaPlayerController implements Initializable {
         return Duration.millis(totalMilliseconds);
     }
 
-    public void setMainScene(Scene scene) {
-        this.mainScene = scene;
-    }
 
-    @FXML
-    void changeThemeToGreen() {
-        mainScene.getStylesheets().clear();
-        mainScene.getStylesheets().add(getClass().getResource("green-theme.css").toExternalForm());
-    }
-
-    @FXML
-    void changeThemeToDark() {
-        mainScene.getStylesheets().clear();
-        mainScene.getStylesheets().add(getClass().getResource("dark-theme.css").toExternalForm());
-    }
-
-    @FXML
-    void changeThemeToBlue() {
-        mainScene.getStylesheets().clear();
-        mainScene.getStylesheets().add(getClass().getResource("blue-theme.css").toExternalForm());
-    }
-
-    @FXML
-    void changeThemeToRed() {
-        mainScene.getStylesheets().clear();
-        mainScene.getStylesheets().add(getClass().getResource("red-theme.css").toExternalForm());
-    }
     private Media media;
     private MediaPlayer mediaPlayer;
 
@@ -433,6 +431,43 @@ public class MediaPlayerController implements Initializable {
         }
     };
 
+    private void displaySubtitle(Duration currentTime) {
+        // Initialize a variable to keep track of the currently displayed subtitle
+        String currentSubtitle = null;
+
+        // Iterate through subtitleTimes to find the appropriate subtitle
+        for (Map.Entry<Integer, Duration> entry : subtitleTimes.entrySet()) {
+            if (currentTime.greaterThanOrEqualTo(entry.getValue())) {
+                // Find the subtitle corresponding to the current time
+                int subtitleNumber = entry.getKey();
+                currentSubtitle = subtitles.get(subtitleNumber);
+            } else {
+                // Stop once we've found the first subtitle that hasn't appeared yet
+                break;
+            }
+        }
+
+        // Update the subtitle text only if it has changed
+        if (currentSubtitle != null && !currentSubtitle.equals(subtitleText.getText())) {
+            subtitleText.setText(currentSubtitle);
+        }
+    }
+
+    @FXML
+    private Button SubOnOff;
+
+    @FXML
+    private void subOnOff(MouseEvent event) {
+        if(subActive == 1){
+//            subtitleText.setText("");
+            subActive = 0;
+        }
+        else{
+            subtitleText.setText("");
+            subActive = 1;
+        }
+    }
+
     private void updateDurationLabel(Duration totalDuration) {
         int hours = (int) totalDuration.toHours();
         int minutes = (int) (totalDuration.toMinutes() % 60);
@@ -460,25 +495,11 @@ public class MediaPlayerController implements Initializable {
         if (!fileExtension.equals("srt") && !playlist.contains(selectedFile)) {
             playlist.add(selectedFile);
         }
-//        System.out.println(playlist);
-//        System.out.println(selectedFile);
+
         ObservableList<File> observablePlaylist = FXCollections.observableArrayList(playlist);
 
         // Set the ObservableList as the items of the ListView
         playlistView.setItems(observablePlaylist);
-
-//        // Hide the ListView initially
-//        playlistView.setVisible(false);
-
-//        // Show the ListView on mouse entered
-//        playlistView.setOnMouseEntered((MouseEvent even) -> {
-//            playlistView.setVisible(true);
-//        });
-//
-//        // Hide the ListView on mouse exited
-//        playlistView.setOnMouseExited((MouseEvent even) -> {
-//            playlistView.setVisible(false);
-//        });
 
         if (fileExtension.equals("srt")) {
             loadSubtitles(selectedFile);
@@ -573,94 +594,9 @@ public class MediaPlayerController implements Initializable {
             }catch (MediaException e){
                 System.out.println("Error: Unsupported Media File " + e);
             }
-//            media = new Media(url);
-//            mediaPlayer = new MediaPlayer(media);
-//            if(fileExtension.equals("mp3") || fileExtension.equals("wav")){
-//                media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object> c) -> {
-//                    if (c.wasAdded()) {
-//                        if ("artist".equals(c.getKey())) {
-//                            String  artist = c.getValueAdded().toString();
-//                            lbartist.setText(artist);
-//                        } else if ("title".equals(c.getKey())) {
-//                            String title = c.getValueAdded().toString();
-//                        } else if ("year".equals(c.getKey())) {
-//                            String album = c.getValueAdded().toString();
-//                            lbalbum.setText(album);
-//                        }
-//                    }
-//                });
-//            }
-//            mediaView.setMediaPlayer(mediaPlayer);
-//
-//            // Set window title to the name of the file being played
-//            Stage stage = (Stage) mediaView.getScene().getWindow();
-//            stage.setTitle(fileName);
-//
-//            // Update media duration and slider max value when media is ready
-//            mediaPlayer.setOnReady(() -> {
-//                Duration totalDuration = media.getDuration();
-//                slider.setMax(totalDuration.toSeconds());
-//                int hoursAtStart, secondsAtStart, minutesAtStart, totalSecsAtStart;
-//                String timeStringAtStart;
-//                totalSecsAtStart = (int) (int) totalDuration.toSeconds();
-//                hoursAtStart = totalSecsAtStart / 3600;
-//                minutesAtStart = (totalSecsAtStart % 3600) / 60;
-//                secondsAtStart = totalSecsAtStart % 60;
-//                timeStringAtStart = String.format("%02d:%02d:%02d", hoursAtStart, minutesAtStart, secondsAtStart);
-//                lblDuration.setText("Duration: 00 / " + timeStringAtStart);
-//            });
-//
-//            // Bind volumeSlider to MediaPlayer volume property
-//            mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty().divide(100.0));
-//
-//            // Set the initial volume of the media player
-//            volumeSlider.setValue(75);
-//
-//            // Initialize volumeSlider with initial volume value of MediaPlayer
-//            if (mediaPlayer != null) {
-//                double initialVolume = mediaPlayer.getVolume() * 100.0; // Convert volume range (0.0 - 1.0) to (0 - 100)
-//                volumeSlider.setValue(initialVolume);
-//            }
-//
-//            // Add listener to update slider and lblDuration based on currentTime
-//            mediaPlayer.currentTimeProperty().addListener((observableValue, oldValue, newValue) -> {
-//                slider.setValue(newValue.toSeconds());
-//                int hours, seconds, minutes, totalSecs;
-//                String timeString;
-//                totalSecs = (int) media.getDuration().toSeconds();
-//                hours = totalSecs / 3600;
-//                minutes = (totalSecs % 3600) / 60;
-//                seconds = totalSecs % 60;
-//                timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-//
-//                int hoursNow, secondsNow, minutesNow, totalSecsNow;
-//                String timeStringNow;
-//                totalSecsNow = (int) slider.getValue();
-//                hoursNow = totalSecsNow / 3600;
-//                minutesNow = (totalSecsNow % 3600) / 60;
-//                secondsNow = totalSecsNow % 60;
-//                timeStringNow = String.format("%02d:%02d:%02d", hoursNow, minutesNow, secondsNow);
-//                displaySubtitle(newValue);
-//
-//                lblDuration.setText("Duration: " + timeStringNow + " / " + timeString);
-//            });
-//
-//            Scene scene = mediaView.getScene();
-//            mediaView.fitWidthProperty().bind(scene.widthProperty());
-//            mediaView.fitHeightProperty().bind(scene.heightProperty());
-//            mediaPlayer.play();
         }
     }
 
-    //        // Show the ListView on mouse entered
-//        playlistView.setOnMouseEntered((MouseEvent even) -> {
-//            playlistView.setVisible(true);
-//        });
-//
-//        // Hide the ListView on mouse exited
-//        playlistView.setOnMouseExited((MouseEvent even) -> {
-//            playlistView.setVisible(false);
-//        });
 
     private Image muteImage;
     private Image volubleImage;
@@ -688,42 +624,7 @@ public class MediaPlayerController implements Initializable {
     private void sliderPressed(MouseEvent event) {
         mediaPlayer.seek(Duration.seconds(slider.getValue()));
     }
-    private void displaySubtitle(Duration currentTime) {
-        // Initialize a variable to keep track of the currently displayed subtitle
-        String currentSubtitle = null;
 
-        // Iterate through subtitleTimes to find the appropriate subtitle
-        for (Map.Entry<Integer, Duration> entry : subtitleTimes.entrySet()) {
-            if (currentTime.greaterThanOrEqualTo(entry.getValue())) {
-                // Find the subtitle corresponding to the current time
-                int subtitleNumber = entry.getKey();
-                currentSubtitle = subtitles.get(subtitleNumber);
-            } else {
-                // Stop once we've found the first subtitle that hasn't appeared yet
-                break;
-            }
-        }
-
-        // Update the subtitle text only if it has changed
-        if (currentSubtitle != null && !currentSubtitle.equals(subtitleText.getText())) {
-            subtitleText.setText(currentSubtitle);
-        }
-    }
-
-    @FXML
-    private Button SubOnOff;
-
-    @FXML
-    private void subOnOff(MouseEvent event) {
-        if(subActive == 1){
-//            subtitleText.setText("");
-            subActive = 0;
-        }
-        else{
-            subtitleText.setText("");
-            subActive = 1;
-        }
-    }
 
 }
 
